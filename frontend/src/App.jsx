@@ -1,30 +1,41 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  let box = <div className='box'>
+    hello
+  </div>
+
+  const renderGrid = () => {
+    let grid = []
+
+    for (let i = 0; i < 8; i++) {
+      grid.push([])
+      for (let j = 0; j < 15; j++) {
+        grid[grid.length - 1].push(
+          <div className='box'>
+            {`${i}, ${j}`}
+          </div>
+        )
+      }
+      // grid.push(<br />)
+    }
+
+
+    return (
+      <div className='grid'>
+        {grid}
+      </div>
+    )
+
+  }
 
   return (
     <div className="App">
-      <div>
-
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
       <h1>Welcome</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
+      {renderGrid()}
     </div>
   )
 }
