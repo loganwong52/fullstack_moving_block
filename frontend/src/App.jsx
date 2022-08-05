@@ -17,7 +17,7 @@ function App() {
 
   // BULLET'S COORDS
   const [bulletRow, setBulletRow] = useState(ROWMAX - 1)
-  const [bulletCol, setBulletCol] = useState(7)
+  const [bulletCol, setBulletCol] = useState(6)
   const [bulletFired, setBulletFired] = useState(false)
 
   // prevent the arrow & space keys from scrolling the page!!!
@@ -84,6 +84,8 @@ function App() {
   }, [playerRow, playerCol])
 
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   // Cooldown for Bullet
   useEffect(() => {
     // if bullet has been fired, there's a cooldown time
@@ -104,10 +106,41 @@ function App() {
       console.log("I haven't fired the bullet.")
 
     }
-
   }, [bulletFired])
 
 
+  // Every X ms, bullet 1 moves up 1 row
+  useEffect(() => {
+    const bulletTimer = setInterval(() => {
+      setBulletRow(prevBulletRow => prevBulletRow - 1)
+      console.log("Bullet moved up!")
+
+      return () => {
+        clearInterval(bulletTimer)
+        console.log("Bullet despawned!")
+      }
+
+    }, 100)
+
+  }, [])
+
+
+  // If Bullet is at the top, reset it's location to bottom row
+  useEffect(() => {
+    console.log("bulletRow: ", bulletRow)
+    console.log("bulletCol: ", bulletCol)
+
+    if (bulletRow === -1) {
+      console.log("STOP bullet!!!")
+      setBulletRow(ROWMAX - 1)
+      // setBulletCol(Math.floor(Math.random() * COLMAX - 1))
+      console.log("Bullet has reset!")
+    }
+
+  }, [bulletRow])
+
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Every X ms, enemy 1 moves down 1 row
   useEffect(() => {
     const timer = setInterval(() => {
@@ -138,6 +171,7 @@ function App() {
 
   }, [enemy1Row])
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // style for player's red square
   const boxStyle = {
@@ -151,6 +185,12 @@ function App() {
     color: 'red'
   }
 
+  // style for the bullet
+  const bulletStyle = {
+    backgroundColor: 'goldenrod',
+    color: 'black'
+  }
+
   // CODE FOR POPULATING THE GRID
   const renderGrid = () => {
     let grid = []
@@ -159,19 +199,31 @@ function App() {
       grid.push([])
       for (let j = 0; j < COLMAX; j++) {
         if (i == playerRow && j == playerCol) {
+          // box is the player
           grid[grid.length - 1].push(
             <div className='box' style={boxStyle}>
               {`${i}, ${j}`}
             </div >
           )
+
         } else if (i == enemy1Row && j == enemy1Col) {
+          // box is the enemy
           grid[grid.length - 1].push(
             <div className='box' style={enemy1Style}>
               {`${i}, ${j}`}
             </div >
           )
+
+        } else if (i == bulletRow && j == bulletCol) {
+          grid[grid.length - 1].push(
+            <div className='box' style={bulletStyle}>
+              {`${i}, ${j}`}
+            </div >
+          )
+
         }
         else {
+          // box is empty
           grid[grid.length - 1].push(
             <div className='box'>
               {`${i}, ${j}`}
