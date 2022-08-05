@@ -33,11 +33,8 @@ function App() {
       case 32:
         console.log("space pressed!")
 
-        if (!bulletFired) {
-          console.log("I fired the bullet! Set fired to true.")
+        setBulletFired(true)
 
-          setBulletFired(true)
-        }
         break;
       case 37:
         if (playerCol > 0) {
@@ -87,6 +84,7 @@ function App() {
   }, [playerRow, playerCol])
 
 
+  // Cooldown for Bullet
   useEffect(() => {
     // if bullet has been fired, there's a cooldown time
     console.log("Has bullet been fired: ", bulletFired)
@@ -97,6 +95,13 @@ function App() {
         console.log("Done waiting! Set fired to false.")
         setBulletFired(false)
       }, 5000)
+
+      // confirm you can't spam bullets...
+      const counter = setInterval(() => { console.log("I'm counting...") }, 1000)
+      return () => { clearInterval(counter) }
+
+    } else {
+      console.log("I haven't fired the bullet.")
 
     }
 
