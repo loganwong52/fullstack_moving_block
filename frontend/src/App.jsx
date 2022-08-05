@@ -167,9 +167,20 @@ function App() {
 
     if (enemy1Row === -1) {
       // console.log("STOP!!!")
-      setEnemy1Row(Math.floor(Math.random() * 2))
-      setEnemy1Col(Math.floor(Math.random() * (COLMAX - 1)))
+      setEnemy1Row(Math.floor(Math.random() * 2))     // randomly chooses ROW 0, 1, or 2
+
+      //randomly chooses NEW col that's NOT the same
+      let newCol = enemy1Col
+      if (newCol < 7) {
+        // enemy respawns on the right side (COLS 7 thru 14 inclusive)
+        newCol = Math.floor(Math.random() * (COLMAX - 7) + 7)
+      } else {
+        // >= 6, enemy respawns on the left side (COLS 0 thru 6 inclusive)
+        newCol = Math.floor(Math.random() * 6)
+      }
+      setEnemy1Col(newCol)
       // console.log("Enemy 1 has reset!")
+
     } else if (enemy1Row === ROWMAX) {
       // YOU LOSE!
       setYouLost(true)
@@ -270,10 +281,24 @@ function App() {
     )
   }
 
+  function reloadPage() {
+    window.location.reload()
+  }
+
   // The actual App
   return (
     <div className="App">
-      <h1>ROW: {playerRow} | COL: {playerCol} | POINTS: {points}</h1>
+      {
+        youLost
+          ?
+          <div>
+            <h1> YOU LOST! | POINTS: {points}</h1>
+            <button onClick={reloadPage}>Replay?</button>
+          </div>
+
+          : <h1>ROW: {playerRow} | COL: {playerCol} | POINTS: {points}</h1>
+
+      }
 
       {renderGrid()}
 

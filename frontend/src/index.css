@@ -35,6 +35,7 @@ h1 {
   line-height: 1.1;
   margin: 0px;
   padding-bottom: 8px;
+  display: inline-block;
 }
 
 button {
@@ -47,10 +48,13 @@ button {
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
+  display: inline-block;
+  margin-left: 50px
 }
 
 button:hover {
   border-color: #646cff;
+  background-color: lightgreen;
 }
 
 button:focus,
