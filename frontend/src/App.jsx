@@ -17,8 +17,9 @@ function App() {
 
   // BULLET'S COORDS
   const [bulletRow, setBulletRow] = useState(ROWMAX - 1)
-  const [bulletCol, setBulletCol] = useState(6)
+  const [bulletCol, setBulletCol] = useState(-1)
   const [bulletFired, setBulletFired] = useState(false)
+  const [reachedTheTop, setReachedTheTop] = useState(false)
 
   // prevent the arrow & space keys from scrolling the page!!!
   window.addEventListener("keydown", function (e) {
@@ -91,12 +92,15 @@ function App() {
     // if bullet has been fired, there's a cooldown time
     console.log("Has bullet been fired: ", bulletFired)
     if (bulletFired) {
-      // wait 2 seconds
+      // spawn the bullet
+      setBulletCol(playerCol)
+
+      // wait 1.5 seconds
       console.log("I'm gonna wait...")
-      setTimeout(() => { // after 2 seconds, 
+      setTimeout(() => {
         console.log("Done waiting! Set fired to false.")
         setBulletFired(false)
-      }, 5000)
+      }, 1500)
 
       // confirm you can't spam bullets...
       const counter = setInterval(() => { console.log("I'm counting...") }, 1000)
@@ -104,6 +108,7 @@ function App() {
 
     } else {
       console.log("I haven't fired the bullet.")
+      setReachedTheTop(false)
 
     }
   }, [bulletFired])
@@ -111,28 +116,33 @@ function App() {
 
   // Every X ms, bullet 1 moves up 1 row
   useEffect(() => {
-    const bulletTimer = setInterval(() => {
-      setBulletRow(prevBulletRow => prevBulletRow - 1)
-      console.log("Bullet moved up!")
+    if (bulletFired && !reachedTheTop) {
+      const bulletTimer = setInterval(() => {
+        setBulletRow(prevBulletRow => prevBulletRow - 1)
+        // console.log("Bullet moved up!")
+
+      }, 100)
+      // it takes 600 ms to get to the other side
 
       return () => {
         clearInterval(bulletTimer)
-        console.log("Bullet despawned!")
+        // console.log("Bullet despawned!")
       }
+    }
 
-    }, 100)
-
-  }, [])
+  }, [bulletFired, reachedTheTop])
 
 
   // If Bullet is at the top, reset it's location to bottom row
   useEffect(() => {
-    console.log("bulletRow: ", bulletRow)
-    console.log("bulletCol: ", bulletCol)
+    // console.log("bulletRow: ", bulletRow)
+    // console.log("bulletCol: ", bulletCol)
 
     if (bulletRow === -1) {
       console.log("STOP bullet!!!")
       setBulletRow(ROWMAX - 1)
+      setBulletCol(-1)
+      setReachedTheTop(true)
       // setBulletCol(Math.floor(Math.random() * COLMAX - 1))
       console.log("Bullet has reset!")
     }
