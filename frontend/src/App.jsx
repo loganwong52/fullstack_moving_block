@@ -14,12 +14,16 @@ function App() {
   const [enemy1Row, setEnemy1Row] = useState(Math.floor(Math.random() * 2))
   const [enemy1Col, setEnemy1Col] = useState(Math.floor(Math.random() * (COLMAX - 1)))
 
-
   // BULLET'S COORDS
   const [bulletRow, setBulletRow] = useState(ROWMAX - 1)
   const [bulletCol, setBulletCol] = useState(-1)
   const [bulletFired, setBulletFired] = useState(false)
   const [reachedTheTop, setReachedTheTop] = useState(false)
+
+
+  // POINTS
+  const [points, setPoints] = useState(0)
+
 
   // prevent the arrow & space keys from scrolling the page!!!
   window.addEventListener("keydown", function (e) {
@@ -85,7 +89,7 @@ function App() {
   }, [playerRow, playerCol])
 
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Bullet movemet ////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // Cooldown for Bullet
   useEffect(() => {
@@ -150,19 +154,21 @@ function App() {
   }, [bulletRow])
 
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //  Enemy movement  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   // Every X ms, enemy 1 moves down 1 row
   useEffect(() => {
     const timer = setInterval(() => {
       setEnemy1Row(prevEnemy1Row => prevEnemy1Row + 1)
       // console.log("I've moved down!")
 
-      return () => {
-        clearInterval(timer)
-        console.log("Enemy 1 died!")
-      }
-
     }, 500)
+
+    // this return might actually never run...
+    return () => {
+      clearInterval(timer)
+      console.log("Enemy 1 despawned!")
+    }
 
   }, [])
 
@@ -181,7 +187,23 @@ function App() {
 
   }, [enemy1Row])
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // When bullet and enemy 1 overlap...   //////////////////////////////////////////////////////////////////////////
+  useEffect(() => {
+
+    // if they overlap, increment points by 1
+    if (bulletRow === enemy1Row && bulletCol === enemy1Col) {
+      setPoints(prevPoints => prevPoints + 1)
+
+      // hide the enemy
+      setTimeout(() => { console.log("Enemy 1 is respawning") }, 1250) // it takes enemy 1.25 second to respawn?
+      setEnemy1Row(ROWMAX)
+
+    }
+
+  }, [bulletRow, enemy1Row])
+
+  // Render the Grid ///////////////////////////////////////////////////////////////////////////////////////////////
 
   // style for player's red square
   const boxStyle = {
@@ -253,7 +275,7 @@ function App() {
   // The actual App
   return (
     <div className="App">
-      <h1>ROW: {playerRow} | COL: {playerCol}</h1>
+      <h1>ROW: {playerRow} | COL: {playerCol} | POINTS: {points}</h1>
 
       {renderGrid()}
 
