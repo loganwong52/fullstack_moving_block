@@ -24,7 +24,7 @@ function App() {
           setPlayerCol(playerCol - 1)
 
         } else {
-          alert("You can't go further left!")
+          console.log("You can't go further left!")
         }
         break;
       case 38:
@@ -33,7 +33,7 @@ function App() {
           setPlayerRow(playerRow - 1)
 
         } else {
-          alert("You can't go further up!")
+          console.log("You can't go further up!")
         }
         break;
       case 39:
@@ -42,7 +42,7 @@ function App() {
           setPlayerCol(playerCol + 1)
 
         } else {
-          alert("You can't go further right!")
+          console.log("You can't go further right!")
         }
         break;
       case 40:
@@ -51,7 +51,7 @@ function App() {
           setPlayerRow(playerRow + 1)
 
         } else {
-          alert("You can't go further down!")
+          console.log("You can't go further down!")
         }
         break;
     }
@@ -67,7 +67,8 @@ function App() {
 
   // CODE FOR FILLING UP THE GRID
   const boxStyle = {
-    backgroundColor: 'purple',
+    backgroundColor: 'FireBrick',
+    color: 'white'
   }
 
   const renderGrid = () => {
@@ -76,11 +77,19 @@ function App() {
     for (let i = 0; i < ROWMAX; i++) {
       grid.push([])
       for (let j = 0; j < COLMAX; j++) {
-        grid[grid.length - 1].push(
-          <div className='box' style={boxStyle}>
-            {`${i}, ${j}`}
-          </div >
-        )
+        if (i == playerRow && j == playerCol) {
+          grid[grid.length - 1].push(
+            <div className='box' style={boxStyle}>
+              {`${i}, ${j}`}
+            </div >
+          )
+        } else {
+          grid[grid.length - 1].push(
+            <div className='box'>
+              {`${i}, ${j}`}
+            </div >
+          )
+        }
       }
     }
 
@@ -90,13 +99,6 @@ function App() {
       </div>
     )
   }
-
-  // useEffect(() => {
-  //   if (playerRow) {
-
-  //   }
-
-  // }, [playerRow, playerCol])
 
 
   return (
