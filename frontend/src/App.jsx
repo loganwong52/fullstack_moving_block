@@ -20,6 +20,9 @@ function App() {
   const [bulletFired, setBulletFired] = useState(false)
   const [reachedTheTop, setReachedTheTop] = useState(false)
 
+  // Bullet Cooldown
+  const [cooldownCount, setCooldownCount] = useState(1.5)
+
   // POINTS
   const [points, setPoints] = useState(0)
   const [youLost, setYouLost] = useState(false)
@@ -86,16 +89,28 @@ function App() {
       // spawn the bullet
       setBulletCol(playerCol)
 
+      // run the cooldown timer!
+      const cdCounter = setInterval(() => {
+        setCooldownCount(prevCooldown => (prevCooldown - 0.01).toFixed(2))
+        // console.log(cooldownCount)
+
+      }, 10)
+
       // wait 1.5 seconds
       console.log("I'm gonna wait...")
       setTimeout(() => {
         console.log("Done waiting! Set fired to false.")
         setBulletFired(false)
+        // once the 1.5 seconds are over, delete the cdCounter so it's not subtracting anymore!
+        clearInterval(cdCounter)
       }, 1500)
+
 
       // confirm you can't spam bullets...
       const counter = setInterval(() => { console.log("I'm counting...") }, 1000)
-      return () => { clearInterval(counter) }
+      return () => {
+        clearInterval(counter)
+      }
 
     } else {
       console.log("I haven't fired the bullet.")
@@ -139,6 +154,16 @@ function App() {
     }
 
   }, [bulletRow])
+
+  // updating cooldown count
+  useEffect(() => {
+    if (cooldownCount < 1.5 && cooldownCount > 0.0) {
+      console.log(cooldownCount)
+    } else {
+      setCooldownCount(1.50)
+    }
+
+  }, [cooldownCount])
 
 
   //  Enemy movement  /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -296,9 +321,14 @@ function App() {
             <button onClick={reloadPage}>Replay?</button>
           </div>
 
-          : <h1>ROW: {playerRow} | COL: {playerCol} | POINTS: {points}</h1>
-
+          :
+          <div>
+            <h1>ROW: {playerRow} | COL: {playerCol} | POINTS: {points}</h1>
+            <h2>BULLET COOLDOWN: {cooldownCount}s</h2>
+            {/* Some bug for the bullet cooldown when game ends... so I'll just NOT display it when you've Lost */}
+          </div>
       }
+
 
       {renderGrid()}
 
