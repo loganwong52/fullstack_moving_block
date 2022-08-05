@@ -20,10 +20,9 @@ function App() {
   const [bulletFired, setBulletFired] = useState(false)
   const [reachedTheTop, setReachedTheTop] = useState(false)
 
-
   // POINTS
   const [points, setPoints] = useState(0)
-
+  const [youLost, setYouLost] = useState(false)
 
   // prevent the arrow & space keys from scrolling the page!!!
   window.addEventListener("keydown", function (e) {
@@ -33,14 +32,18 @@ function App() {
   }, false);
 
   //detecting arrow key presses, or spaces (case 32)
+  // Player can ONLY move left or right
   function keypress(e) {
     switch (e.keyCode) {
+      // Space bar: Fire bullet
       case 32:
         console.log("space pressed!")
 
         setBulletFired(true)
 
         break;
+
+      // Left Arrow Key: Move left by 1 square
       case 37:
         if (playerCol > 0) {
           // console.log('left', playerCol - 1);
@@ -50,15 +53,8 @@ function App() {
           console.log("You can't go further left!")
         }
         break;
-      case 38:
-        if (playerRow > 0) {
-          // console.log('up', playerRow - 1);
-          setPlayerRow(playerRow - 1)
 
-        } else {
-          console.log("You can't go further up!")
-        }
-        break;
+      // Right Arrow Key: Move right by 1 square
       case 39:
         if (playerCol < COLMAX - 1) {
           // console.log('right', playerCol + 1);
@@ -66,15 +62,6 @@ function App() {
 
         } else {
           console.log("You can't go further right!")
-        }
-        break;
-      case 40:
-        if (playerRow < ROWMAX - 1) {
-          // console.log('down', playerRow + 1);
-          setPlayerRow(playerRow + 1)
-
-        } else {
-          console.log("You can't go further down!")
         }
         break;
     }
@@ -178,14 +165,25 @@ function App() {
     // console.log("enemy1Row: ", enemy1Row)
     // console.log("enemy1Col: ", enemy1Col)
 
-    if (enemy1Row === ROWMAX) {
+    if (enemy1Row === -1) {
       // console.log("STOP!!!")
       setEnemy1Row(Math.floor(Math.random() * 2))
       setEnemy1Col(Math.floor(Math.random() * (COLMAX - 1)))
       // console.log("Enemy 1 has reset!")
+    } else if (enemy1Row === ROWMAX) {
+      // YOU LOSE!
+      setYouLost(true)
     }
 
   }, [enemy1Row])
+
+
+  useEffect(() => {
+    if (youLost) {
+      alert("Enemy 1 reached the bottom row! YOU LOSE!")
+      return
+    }
+  }, [youLost])
 
 
   // When bullet and enemy 1 overlap...   //////////////////////////////////////////////////////////////////////////
@@ -197,7 +195,7 @@ function App() {
 
       // hide the enemy
       setTimeout(() => { console.log("Enemy 1 is respawning") }, 1250) // it takes enemy 1.25 second to respawn?
-      setEnemy1Row(ROWMAX)
+      setEnemy1Row(-1)
 
     }
 
