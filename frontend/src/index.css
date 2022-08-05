@@ -34,6 +34,7 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
   margin: 0px;
+  padding-bottom: 8px;
 }
 
 button {
@@ -60,7 +61,7 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    background-color: darkgray;
   }
 
   a:hover {

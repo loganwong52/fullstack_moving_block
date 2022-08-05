@@ -2,22 +2,35 @@ import { useEffect, useState } from 'react'
 import './App.css'
 
 function App() {
-  const ROWMAX = 8
+  // GRID DIMENSIONS
+  const ROWMAX = 7
   const COLMAX = 15
 
-  const [playerRow, setPlayerRow] = useState(7)
+  // PLAYER'S START COORDINATES
+  const [playerRow, setPlayerRow] = useState(ROWMAX - 1)
   const [playerCol, setPlayerCol] = useState(7)
 
-  // prevent the arrow keys from scrolling the page!!!
+
+  // ENEMY 1'S COORDS
+  // min = 0
+  // max = 2 inclusive
+  const [enemy1Row, setEnemy1Row] = useState(Math.floor(Math.random() * 2))
+  const [enemy1Col, setEnemy1Col] = useState(Math.floor(Math.random() * (COLMAX - 1)))
+
+
+  // prevent the arrow & space keys from scrolling the page!!!
   window.addEventListener("keydown", function (e) {
     if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
       e.preventDefault();
     }
   }, false);
 
-  //detecting arrow key presses
+  //detecting arrow key presses, or spaces (case 32)
   function keypress(e) {
     switch (e.keyCode) {
+      case 32:
+        console.log("space pressed!")
+        break;
       case 37:
         if (playerCol > 0) {
           console.log('left', playerCol - 1);
@@ -57,6 +70,9 @@ function App() {
     }
   }
 
+  // Listens for key presses whenever playerRow/playerCol 
+  // are updated, then immediately deletes it. 
+  // This prevents infinite loop of console.logs (somehow)
   useEffect(() => {
     document.addEventListener('keydown', keypress)
     return () => document.removeEventListener("keydown", keypress);
@@ -64,13 +80,50 @@ function App() {
 
 
 
+  // Every X ms, enemy 1 moves down 1 row
+  useEffect(() => {
 
-  // CODE FOR FILLING UP THE GRID
+    const timer = setInterval(() => {
+      setEnemy1Row(prevEnemy1Row => prevEnemy1Row + 1)
+      console.log("I've moved down!")
+
+      return () => {
+        clearInterval(timer)
+      }
+
+    }, 1000)
+
+  }, [])
+
+
+  // If enemy is at the bottom, reset it's location to a random position
+  useEffect(() => {
+    console.log("enemy1Row: ", enemy1Row)
+    console.log("enemy1Col: ", enemy1Col)
+
+    if (enemy1Row === ROWMAX) {
+      console.log("STOP!!!")
+      setEnemy1Row(Math.floor(Math.random() * 2))
+      setEnemy1Col(Math.floor(Math.random() * (COLMAX - 1)))
+      console.log("Enemy 1 has reset!")
+    }
+
+  }, [enemy1Row])
+
+
+  // style for player's red square
   const boxStyle = {
-    backgroundColor: 'FireBrick',
-    color: 'white'
+    backgroundColor: 'firebrick',
+    color: 'orange'
   }
 
+  // style for enemy 1's black square
+  const enemy1Style = {
+    backgroundColor: 'navy',
+    color: 'red'
+  }
+
+  // CODE FOR POPULATING THE GRID
   const renderGrid = () => {
     let grid = []
 
@@ -83,7 +136,14 @@ function App() {
               {`${i}, ${j}`}
             </div >
           )
-        } else {
+        } else if (i == enemy1Row && j == enemy1Col) {
+          grid[grid.length - 1].push(
+            <div className='box' style={enemy1Style}>
+              {`${i}, ${j}`}
+            </div >
+          )
+        }
+        else {
           grid[grid.length - 1].push(
             <div className='box'>
               {`${i}, ${j}`}
@@ -100,7 +160,7 @@ function App() {
     )
   }
 
-
+  // The actual App
   return (
     <div className="App">
       <h1>ROW: {playerRow} | COL: {playerCol}</h1>
