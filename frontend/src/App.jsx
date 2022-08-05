@@ -10,13 +10,15 @@ function App() {
   const [playerRow, setPlayerRow] = useState(ROWMAX - 1)
   const [playerCol, setPlayerCol] = useState(7)
 
-
   // ENEMY 1'S COORDS
-  // min = 0
-  // max = 2 inclusive
   const [enemy1Row, setEnemy1Row] = useState(Math.floor(Math.random() * 2))
   const [enemy1Col, setEnemy1Col] = useState(Math.floor(Math.random() * (COLMAX - 1)))
 
+
+  // BULLET'S COORDS
+  const [bulletRow, setBulletRow] = useState(ROWMAX - 1)
+  const [bulletCol, setBulletCol] = useState(7)
+  const [bulletFired, setBulletFired] = useState(false)
 
   // prevent the arrow & space keys from scrolling the page!!!
   window.addEventListener("keydown", function (e) {
@@ -30,10 +32,16 @@ function App() {
     switch (e.keyCode) {
       case 32:
         console.log("space pressed!")
+
+        if (!bulletFired) {
+          console.log("I fired the bullet! Set fired to true.")
+
+          setBulletFired(true)
+        }
         break;
       case 37:
         if (playerCol > 0) {
-          console.log('left', playerCol - 1);
+          // console.log('left', playerCol - 1);
           setPlayerCol(playerCol - 1)
 
         } else {
@@ -42,7 +50,7 @@ function App() {
         break;
       case 38:
         if (playerRow > 0) {
-          console.log('up', playerRow - 1);
+          // console.log('up', playerRow - 1);
           setPlayerRow(playerRow - 1)
 
         } else {
@@ -51,7 +59,7 @@ function App() {
         break;
       case 39:
         if (playerCol < COLMAX - 1) {
-          console.log('right', playerCol + 1);
+          // console.log('right', playerCol + 1);
           setPlayerCol(playerCol + 1)
 
         } else {
@@ -60,7 +68,7 @@ function App() {
         break;
       case 40:
         if (playerRow < ROWMAX - 1) {
-          console.log('down', playerRow + 1);
+          // console.log('down', playerRow + 1);
           setPlayerRow(playerRow + 1)
 
         } else {
@@ -79,33 +87,48 @@ function App() {
   }, [playerRow, playerCol])
 
 
+  useEffect(() => {
+    // if bullet has been fired, there's a cooldown time
+    console.log("Has bullet been fired: ", bulletFired)
+    if (bulletFired) {
+      // wait 2 seconds
+      console.log("I'm gonna wait...")
+      setTimeout(() => { // after 2 seconds, 
+        console.log("Done waiting! Set fired to false.")
+        setBulletFired(false)
+      }, 5000)
+
+    }
+
+  }, [bulletFired])
+
 
   // Every X ms, enemy 1 moves down 1 row
   useEffect(() => {
-
     const timer = setInterval(() => {
       setEnemy1Row(prevEnemy1Row => prevEnemy1Row + 1)
-      console.log("I've moved down!")
+      // console.log("I've moved down!")
 
       return () => {
         clearInterval(timer)
+        console.log("Enemy 1 died!")
       }
 
-    }, 1000)
+    }, 500)
 
   }, [])
 
 
   // If enemy is at the bottom, reset it's location to a random position
   useEffect(() => {
-    console.log("enemy1Row: ", enemy1Row)
-    console.log("enemy1Col: ", enemy1Col)
+    // console.log("enemy1Row: ", enemy1Row)
+    // console.log("enemy1Col: ", enemy1Col)
 
     if (enemy1Row === ROWMAX) {
-      console.log("STOP!!!")
+      // console.log("STOP!!!")
       setEnemy1Row(Math.floor(Math.random() * 2))
       setEnemy1Col(Math.floor(Math.random() * (COLMAX - 1)))
-      console.log("Enemy 1 has reset!")
+      // console.log("Enemy 1 has reset!")
     }
 
   }, [enemy1Row])
