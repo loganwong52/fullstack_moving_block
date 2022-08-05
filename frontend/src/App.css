@@ -10,12 +10,6 @@
   text-align: center;
   place-items: center;
   margin: 1px;
-  /* float: left; */
-}
-
-.box:hover {
-  background-color: navy;
-  color: white;
 }
 
 .grid {
@@ -23,4 +17,13 @@
   flex-wrap: wrap;
   justify-content: center;
   background-color: red;
+  min-width: none;
+  resize: none;
+  width: 1287px;
+}
+
+/* The exclaimation mark is sus, according to Raphael and Adam. */
+.box:hover {
+  background-color: navy !important;
+  color: white;
 }
