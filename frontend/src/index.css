@@ -48,7 +48,6 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
   display: inline-block;
-  margin-left: 50px
 }
 
 button:hover {
