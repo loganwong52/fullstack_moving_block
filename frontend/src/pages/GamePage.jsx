@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 function GamePage() {
     // GRID DIMENSIONS
@@ -29,6 +30,43 @@ function GamePage() {
 
     // When the game renders, show alert
     const [isLoaded, setIsLoaded] = useState(false)
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    // Image related stuff
+
+    // Noun Image ID numbers
+    const spaceshipID = 4504415
+    const enemyID = 129022
+    const laserID = 288032
+
+    // Image src URLs state values
+    const [spaceshipUrl, setSpaceshipUrl] = useState('')
+    const [enemyUrl, setEnemyUrl] = useState('')
+    const [laserUrl, setLaserUrl] = useState('')
+
+
+    function getData(id) {
+        // request to backend
+        axios.get(`/wish/${id}`).then((response) => {
+            let url = response.data
+            // console.log(url)
+            if (id === spaceshipID) {
+                setSpaceshipUrl(url)
+            } else if (id === enemyID) {
+                setEnemyUrl(url)
+            } else if (id === laserID) {
+                setLaserUrl(url)
+            }
+        })
+    }
+
+    // On mount, retreive the image URLs
+    useEffect(() => {
+        getData(spaceshipID)
+        getData(enemyID)
+        getData(laserID)
+    }, [])
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     useEffect(() => {
         if (!isLoaded) {
@@ -264,7 +302,7 @@ function GamePage() {
 
     // style for enemy 1's black square
     const enemy1Style = {
-        backgroundColor: 'navy',
+        backgroundColor: 'steelblue',
         color: 'red'
     }
 
@@ -285,7 +323,8 @@ function GamePage() {
                     // box is the player
                     grid[grid.length - 1].push(
                         <div className='box' style={boxStyle}>
-                            {`${i}, ${j}`}
+                            <img className='spaceshipImg' src={spaceshipUrl} alt='ship' />
+
                         </div >
                     )
 
@@ -293,14 +332,16 @@ function GamePage() {
                     // box is the enemy
                     grid[grid.length - 1].push(
                         <div className='box' style={enemy1Style}>
-                            {`${i}, ${j}`}
+                            <img className='enemyImg' src={enemyUrl} alt='enemy' />
+
                         </div >
                     )
 
                 } else if (i == bulletRow && j == bulletCol) {
                     grid[grid.length - 1].push(
                         <div className='box' style={bulletStyle}>
-                            {`${i}, ${j}`}
+                            <img className='laserImg' src={laserUrl} alt='laser' />
+
                         </div >
                     )
 
@@ -309,7 +350,6 @@ function GamePage() {
                     // box is empty
                     grid[grid.length - 1].push(
                         <div className='box'>
-                            {`${i}, ${j}`}
                         </div >
                     )
                 }

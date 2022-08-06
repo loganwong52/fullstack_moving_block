@@ -34,3 +34,23 @@ h2 {
 .you-lost-button {
   margin-left: 50px;
 }
+
+
+/* IMAGE CSS */
+img {
+  width: 60px;
+  height: 60px;
+}
+
+.spaceshipImg {
+  margin-top: 10px;
+}
+
+.enemyImg {
+  margin-top: 12px;
+}
+
+.laserImg {
+  margin-top: 10px;
+  transform: rotate(135deg);
+}
