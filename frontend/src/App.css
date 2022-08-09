@@ -54,3 +54,8 @@ img {
   margin-top: 10px;
   transform: rotate(135deg);
 }
+
+.goHomeBtn {
+  margin-left: 10px;
+  margin-right: 10px;
+}
