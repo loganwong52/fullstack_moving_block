@@ -47,7 +47,7 @@ function GamePage() {
 
     function getData(id) {
         // request to backend
-        axios.get(`/wish/${id}`).then((response) => {
+        axios.get(`/geturls/${id}`).then((response) => {
             let url = response.data
             // console.log(url)
             if (id === spaceshipID) {
@@ -373,6 +373,11 @@ function GamePage() {
         // get username
         let name = event.target[0].value
 
+        if (name.length === 0) {
+            alert("Please enter a name!")
+            return
+        }
+
         // points is the state value 'points'
 
         axios.post('/saveScore', {
@@ -380,7 +385,7 @@ function GamePage() {
             score: points
 
         }).then((response) => {
-            console.log('response from server:', response)
+            console.log('response from saveScore:', response)
 
             // UseNavigate to go to show score page
 
@@ -403,9 +408,6 @@ function GamePage() {
                         <button className="you-lost-button" onClick={reloadPage}>Replay?</button>
                         <button className="you-lost-button">
                             <Link to={'/'}>Return to Home Page</Link>
-                        </button>
-                        <button className="you-lost-button">
-                            <Link to={'/savescore'}>Save Highscore</Link>
                         </button>
                     </div>
 

@@ -3,5 +3,6 @@ from django.urls import path
 
 urlpatterns = [
     path('', views.send_the_homepage),
-    path('wish/<int:id>/', views.wish)
+    path('geturls/<int:id>/', views.geturls),
+    path('saveScore', views.saveScore)
 ]
