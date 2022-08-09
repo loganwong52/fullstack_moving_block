@@ -1,3 +1,4 @@
+from pickle import FALSE
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
@@ -40,13 +41,13 @@ def geturls(request, id):
 
 @api_view(['POST'])
 def saveScore(request):
-    print(request.data)
+    # print(request.data)
 
     name = request.data['name']
     score = request.data['score']
 
     try:
-        player = User.objects.create(name=name, score=score)
+        User.objects.create(name=name, score=score)
         # return JsonResponse({'data':player})  
         return HttpResponse(f'{name} has been saved with score of {score}!')
 
@@ -54,3 +55,19 @@ def saveScore(request):
         print(str(e))
 
     return HttpResponse("An error has occurred in saveScore")
+
+
+@api_view(['GET'])
+def getScores(request):
+    # print(request.data)
+
+    try:
+        allUsers = User.objects.all().order_by('-score').values()
+        data = list(allUsers)
+        # print(data)
+        return JsonResponse({'data':data})
+
+    except Exception as e:
+        print(str(e))    
+
+    return JsonResponse({'success': False})

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+
 
 function GamePage() {
     // GRID DIMENSIONS
@@ -27,6 +28,7 @@ function GamePage() {
     // POINTS
     const [points, setPoints] = useState(0)
     const [youLost, setYouLost] = useState(false)
+    let navigate = useNavigate();
 
     // When the game renders, show alert
     const [isLoaded, setIsLoaded] = useState(false)
@@ -388,9 +390,10 @@ function GamePage() {
             console.log('response from saveScore:', response)
 
             // UseNavigate to go to show score page
+            navigate('/highscores')
 
         }).catch((error) => {
-            console.log("There was an error! ")
+            console.log("There was an error while saving the score!", error)
 
         })
 
