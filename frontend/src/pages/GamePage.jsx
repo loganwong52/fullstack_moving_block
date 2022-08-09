@@ -367,6 +367,31 @@ function GamePage() {
         window.location.reload()
     }
 
+    const handleSaveScore = (event) => {
+        event.preventDefault()
+
+        // get username
+        let name = event.target[0].value
+
+        // points is the state value 'points'
+
+        axios.post('/saveScore', {
+            name: name,
+            score: points
+
+        }).then((response) => {
+            console.log('response from server:', response)
+
+            // UseNavigate to go to show score page
+
+        }).catch((error) => {
+            console.log("There was an error! ")
+
+        })
+
+    }
+
+
     // The actual App
     return (
         <div className="App">
@@ -378,6 +403,9 @@ function GamePage() {
                         <button className="you-lost-button" onClick={reloadPage}>Replay?</button>
                         <button className="you-lost-button">
                             <Link to={'/'}>Return to Home Page</Link>
+                        </button>
+                        <button className="you-lost-button">
+                            <Link to={'/savescore'}>Save Highscore</Link>
                         </button>
                     </div>
 
@@ -391,6 +419,32 @@ function GamePage() {
 
 
             {renderGrid()}
+
+            {
+                youLost
+                    ?
+                    <div>
+                        <h1>Save your score!</h1>
+                        <hr />
+
+                        {/* enter name */}
+                        <form onSubmit={handleSaveScore} >
+                            <label>
+                                Name:
+                                <input id="name-input" type="text" name="name" />
+                            </label>
+                            <br />
+                            <label>
+                                Points: {points}
+                            </label>
+
+                            <br />
+                            <input type="submit" value="Submit" />
+                        </form>
+
+                    </div>
+                    : ''
+            }
 
         </div>
     )
