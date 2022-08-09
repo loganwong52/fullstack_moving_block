@@ -11,8 +11,8 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()   # this func takes the variables from our .env file and adds them to os.environ
-print(os.environ)
-pp = pprint.PrettyPrinter(indent=2, depth=2)
+# print(os.environ)
+# pp = pprint.PrettyPrinter(indent=2, depth=2)
 
 def send_the_homepage(request):
     print('home!')
@@ -27,28 +27,23 @@ def geturls(request, id):
     # this is the route
     endpoint = f"http://api.thenounproject.com/icon/{id}"
 
-    # you're now passing 2 args to .get(). The route, as well as the auth, since 
-    # this API database is more protected, we need to use backend to access it
+    # pass endpoint and auth into .get() since this API database is protected
     response = requests.get(endpoint, auth=auth)
     responseJSON = response.json()
     # pp.pprint(responseJSON)
     
-    icon_url = responseJSON['icon']['preview_url']
-    # print(icon_url)
-    
+    icon_url = responseJSON['icon']['preview_url']    
     return HttpResponse(icon_url)
 
 
 @api_view(['POST'])
 def saveScore(request):
-    # print(request.data)
-
     name = request.data['name']
     score = request.data['score']
 
     try:
+        # Create a user with the given name and score
         User.objects.create(name=name, score=score)
-        # return JsonResponse({'data':player})  
         return HttpResponse(f'{name} has been saved with score of {score}!')
 
     except Exception as e:
@@ -59,12 +54,10 @@ def saveScore(request):
 
 @api_view(['GET'])
 def getScores(request):
-    # print(request.data)
-
     try:
+        # Get all users and order their scores from greatest to least
         allUsers = User.objects.all().order_by('-score').values()
         data = list(allUsers)
-        # print(data)
         return JsonResponse({'data':data})
 
     except Exception as e:

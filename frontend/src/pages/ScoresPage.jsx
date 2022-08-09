@@ -12,7 +12,7 @@ function ScorePage() {
 
         axios.get('/getScores').then((response) => {
             let allUsers = response.data.data
-            console.log('response from getScores ', allUsers)
+            // console.log('response from getScores ', allUsers)
 
             let user = null
             for (let i = 1; i <= allUsers.length; i++) {

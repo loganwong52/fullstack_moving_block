@@ -48,7 +48,7 @@ function GamePage() {
 
 
     function getData(id) {
-        // request to backend
+        // send request to backend to access the Noun API and get image URLs
         axios.get(`/geturls/${id}`).then((response) => {
             let url = response.data
             // console.log(url)
@@ -149,8 +149,6 @@ function GamePage() {
             // run the cooldown timer!
             const cdCounter = setInterval(() => {
                 setCooldownCount(prevCooldown => (prevCooldown - 0.01).toFixed(2))
-                // console.log(cooldownCount)
-
             }, 10)
 
             // wait 1.5 seconds
@@ -161,13 +159,6 @@ function GamePage() {
                 // once the 1.5 seconds are over, delete the cdCounter so it's not subtracting anymore!
                 clearInterval(cdCounter)
             }, 1500)
-
-
-            // confirm you can't spam bullets...
-            const counter = setInterval(() => { console.log("I'm counting...") }, 1000)
-            return () => {
-                clearInterval(counter)
-            }
 
         } else {
             console.log("I haven't fired the bullet.")
@@ -214,14 +205,13 @@ function GamePage() {
 
     // updating cooldown count
     useEffect(() => {
-        if (cooldownCount < 1.5 && cooldownCount > 0.0) {
+        if (bulletFired) {
             console.log(cooldownCount)
         } else {
             setCooldownCount(1.50)
         }
 
-    }, [cooldownCount])
-
+    }, [bulletFired, cooldownCount])
 
     //  Enemy movement  /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -381,15 +371,14 @@ function GamePage() {
         }
 
         // points is the state value 'points'
-
         axios.post('/saveScore', {
             name: name,
             score: points
 
         }).then((response) => {
-            console.log('response from saveScore:', response)
+            // console.log('response from saveScore:', response)
 
-            // UseNavigate to go to show score page
+            //go to show score page
             navigate('/highscores')
 
         }).catch((error) => {
@@ -418,7 +407,8 @@ function GamePage() {
                     <div>
                         <h1>ROW: {playerRow} | COL: {playerCol} | POINTS: {points}</h1>
                         <h2>BULLET COOLDOWN: {cooldownCount}s</h2>
-                        {/* Some bug for the bullet cooldown when game ends... so I'll just NOT display it when you've Lost */}
+                        {/* Some bug for the bullet cooldown when game ends... 
+                        so I'll just NOT display it when you've Lost */}
                     </div>
             }
 
@@ -432,7 +422,7 @@ function GamePage() {
                         <h1>Save your score!</h1>
                         <hr />
 
-                        {/* enter name */}
+                        {/* Prompt user to enter their name */}
                         <form onSubmit={handleSaveScore} >
                             <label>
                                 Name:
@@ -446,8 +436,8 @@ function GamePage() {
                             <br />
                             <input type="submit" value="Submit" />
                         </form>
-
                     </div>
+
                     : ''
             }
 
