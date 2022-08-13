@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 
 function CooldownCounter({ youLost, ROWMAX, bulletRow, playerCol, setBulletRow, setBulletCol, bulletFired, setBulletFired }) {
-    // Bullet Cooldown
+    // Initial cooltime start time
     const [cooldownCount, setCooldownCount] = useState(1.5)
 
     const [reachedTheTop, setReachedTheTop] = useState(false)
 
-    // Cooldown for Bullet //////////////////////////////////////////////////////////////////////////
+    // Cooldown Countdown //////////////////////////////////////////////////////////////////////////
     useEffect(() => {
         // if bullet has been fired, there's a cooldown time
         console.log("Has bullet been fired: ", bulletFired)
@@ -35,6 +35,7 @@ function CooldownCounter({ youLost, ROWMAX, bulletRow, playerCol, setBulletRow, 
         }
     }, [bulletFired])
 
+
     // updating cooldown count
     useEffect(() => {
         if (bulletFired) {
@@ -46,8 +47,7 @@ function CooldownCounter({ youLost, ROWMAX, bulletRow, playerCol, setBulletRow, 
     }, [bulletFired, cooldownCount])
 
 
-
-    // Bullet movemet ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Bullet movemet /////////////////////////////////////////////////////////////////////////////////////////////
 
     // Every X ms, bullet 1 moves up 1 row
     useEffect(() => {
@@ -85,7 +85,7 @@ function CooldownCounter({ youLost, ROWMAX, bulletRow, playerCol, setBulletRow, 
     }, [bulletRow])
 
 
-    /////////////////////////////////////////////////////////////////////////////////////////
+    // Render bullet cooldown display ///////////////////////////////////////////////////////////////////////////////
 
     //  Some bug for the bullet cooldown when game ends... 
     // so I'll just NOT display it when you've Lost
@@ -96,7 +96,6 @@ function CooldownCounter({ youLost, ROWMAX, bulletRow, playerCol, setBulletRow, 
                     ? ''
                     : <h2>BULLET COOLDOWN: {cooldownCount}s</h2>
             }
-
         </div>
     )
 }

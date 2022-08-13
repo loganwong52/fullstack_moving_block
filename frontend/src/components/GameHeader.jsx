@@ -22,7 +22,7 @@ function GameHeader({ youLost, points, playerCol }) {
 
                     :
                     <div>
-                        <h1>COL: {playerCol} | POINTS: {points}</h1>
+                        <h1>COL: {playerCol + 1} | POINTS: {points}</h1>
                     </div>
             }
         </div>

@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
+function Grid({ playerCol, setPlayerCol, setBulletFired, ROWMAX, COLMAX, bulletRow, bulletCol, setPoints, setYouLost }) {
 
-function Grid({ playerCol, setPlayerCol, setBulletFired,
-    ROWMAX, COLMAX, bulletRow, bulletCol, setPoints, setYouLost }) {
     const [playerRow, setPlayerRow] = useState(ROWMAX - 1)
+
     // ENEMY 1'S COORDS
-    const [enemy1Row, setEnemy1Row] = useState(Math.floor(Math.random() * 2))
-    const [enemy1Col, setEnemy1Col] = useState(Math.floor(Math.random() * (COLMAX - 1)))
+    const [enemy1Row, setEnemy1Row] = useState(0)
+    const [enemy1Col, setEnemy1Col] = useState(playerCol)
 
 
     // Image related stuff
@@ -90,17 +90,17 @@ function Grid({ playerCol, setPlayerCol, setBulletFired,
         }
     }
 
-    // Listens for key presses whenever playerRow/playerCol 
-    // are updated, then immediately deletes it. 
+    // Listens for key presses whenever playerCol 
+    // is updated, then immediately deletes it. 
     // This prevents infinite loop of console.logs (somehow)
     useEffect(() => {
         document.addEventListener('keydown', keypress)
         return () => document.removeEventListener("keydown", keypress);
-    }, [playerRow, playerCol])
+    }, [playerCol])
 
 
 
-    //  Enemy movement  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //  Enemy movement  ////////////////////////////////////////////////////////////////////////////////////////////
 
     // Every X ms, enemy 1 moves down 1 row
     useEffect(() => {
@@ -124,7 +124,6 @@ function Grid({ playerCol, setPlayerCol, setBulletFired,
         // console.log("enemy1Col: ", enemy1Col)
 
         if (enemy1Row === -1) {
-            // console.log("STOP!!!")
             setEnemy1Row(Math.floor(Math.random() * 2))     // randomly chooses ROW 0, 1, or 2
 
             //randomly chooses NEW col that's NOT the same
@@ -140,7 +139,6 @@ function Grid({ playerCol, setPlayerCol, setBulletFired,
             // console.log("Enemy 1 has reset!")
 
         } else if (enemy1Row === ROWMAX) {
-            // YOU LOSE!
             setYouLost(true)
         }
 

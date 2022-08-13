@@ -13,7 +13,6 @@ function GamePage() {
     // PLAYER'S START COORDINATES
     const [playerCol, setPlayerCol] = useState(7)
 
-
     // BULLET'S COORDS
     const [bulletRow, setBulletRow] = useState(ROWMAX - 1)
     const [bulletCol, setBulletCol] = useState(-1)
@@ -23,25 +22,21 @@ function GamePage() {
     const [points, setPoints] = useState(0)
     const [youLost, setYouLost] = useState(false)
 
-    // When the game renders, show alert
-    const [isLoaded, setIsLoaded] = useState(false)
-
-    // Start/End Messages /////////////////////////////////////////////////////////////////////////////////////
-
+    // When game renders, show Rules for How to Play
     useEffect(() => {
-        if (!isLoaded) {
-            alert(
-                `How to play:\n
-            Use the LEFT and RIGHT arrow keys to move!
-            Don't let the enemy reach the bottom!
-            Press the space bar to shoot the bullet to kill the enemy!
-            But time it correctly...
-            the bullet has a 1.5 second cool down time!
-            `)
-        }
+        alert(
+            `How to play:\n
+        Use the LEFT and RIGHT arrow keys to move!
+        Don't let the enemy reach the bottom!
+        Press the space bar to shoot the bullet to kill the enemy!
+        But time it correctly...
+        the bullet has a 1.5 second cool down time!`
+        )
 
     }, [])
 
+
+    // If Player loses, show You Lose! message
     useEffect(() => {
         if (youLost) {
             alert("Enemy 1 reached the bottom row! YOU LOSE!")
@@ -50,10 +45,6 @@ function GamePage() {
     }, [youLost])
 
 
-
-
-
-    // The actual App ///////////////////////////////////////////////////////////////////////////////////
     return (
         <div className="App">
             <GameHeader
