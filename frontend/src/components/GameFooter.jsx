@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 function GameFooter({ youLost, points }) {
@@ -14,7 +13,6 @@ function GameFooter({ youLost, points }) {
 
         // get username
         let name = event.target[0].value
-
         if (name.length === 0) {
             alert("Please enter a name!")
             return

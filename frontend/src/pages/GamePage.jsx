@@ -4,6 +4,7 @@ import axios from 'axios'
 import Grid from '../components/Grid'
 import GameHeader from '../components/GameHeader'
 import GameFooter from '../components/GameFooter'
+import CooldownCounter from '../components/CooldownCounter'
 
 
 function GamePage() {
@@ -51,56 +52,6 @@ function GamePage() {
 
     }, [])
 
-    // prevent the arrow & space keys from scrolling the page!!!
-    window.addEventListener("keydown", function (e) {
-        if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
-            e.preventDefault();
-        }
-    }, false);
-
-    //detecting arrow key presses, or spaces (case 32)
-    // Player can ONLY move left or right
-    function keypress(e) {
-        switch (e.keyCode) {
-            // Space bar: Fire bullet
-            case 32:
-                console.log("space pressed!")
-
-                setBulletFired(true)
-
-                break;
-
-            // Left Arrow Key: Move left by 1 square
-            case 37:
-                if (playerCol > 0) {
-                    // console.log('left', playerCol - 1);
-                    setPlayerCol(playerCol - 1)
-
-                } else {
-                    console.log("You can't go further left!")
-                }
-                break;
-
-            // Right Arrow Key: Move right by 1 square
-            case 39:
-                if (playerCol < COLMAX - 1) {
-                    // console.log('right', playerCol + 1);
-                    setPlayerCol(playerCol + 1)
-
-                } else {
-                    console.log("You can't go further right!")
-                }
-                break;
-        }
-    }
-
-    // Listens for key presses whenever playerRow/playerCol 
-    // are updated, then immediately deletes it. 
-    // This prevents infinite loop of console.logs (somehow)
-    useEffect(() => {
-        document.addEventListener('keydown', keypress)
-        return () => document.removeEventListener("keydown", keypress);
-    }, [playerRow, playerCol])
 
 
     // Bullet movemet ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -259,16 +210,18 @@ function GamePage() {
         <div className="App">
             <GameHeader
                 youLost={youLost} points={points}
-                playerRow={playerRow} playerCol={playerCol} cooldownCount={cooldownCount}
+                playerRow={playerRow} playerCol={playerCol}
             />
-
 
             <Grid
                 playerRow={playerRow} playerCol={playerCol}
+                setPlayerCol={setPlayerCol} setBulletFired={setBulletFired}
                 ROWMAX={ROWMAX} COLMAX={COLMAX}
                 enemy1Row={enemy1Row} enemy1Col={enemy1Col}
                 bulletRow={bulletRow} bulletCol={bulletCol}
             />
+
+            <CooldownCounter youLost={youLost} cooldownCount={cooldownCount} />
 
             <GameFooter youLost={youLost} points={points} />
 

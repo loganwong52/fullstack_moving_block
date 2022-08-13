@@ -1,10 +1,6 @@
-import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { Link } from 'react-router-dom'
 
-
-function GameHeader({ youLost, points, playerRow, playerCol, cooldownCount }) {
-
+function GameHeader({ youLost, points, playerRow, playerCol }) {
 
     // Reloads the page
     function reloadPage() {
@@ -27,9 +23,6 @@ function GameHeader({ youLost, points, playerRow, playerCol, cooldownCount }) {
                     :
                     <div>
                         <h1>ROW: {playerRow} | COL: {playerCol} | POINTS: {points}</h1>
-                        <h2>BULLET COOLDOWN: {cooldownCount}s</h2>
-                        {/* Some bug for the bullet cooldown when game ends... 
-                        so I'll just NOT display it when you've Lost */}
                     </div>
             }
         </div>

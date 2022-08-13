@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 
 
-function Grid({ playerRow, playerCol, ROWMAX, COLMAX, enemy1Row, enemy1Col, bulletRow, bulletCol }) {
+function Grid({ playerRow, playerCol, setPlayerCol, setBulletFired,
+    ROWMAX, COLMAX, enemy1Row, enemy1Col, bulletRow, bulletCol }) {
     // Image related stuff
 
     // Noun Image ID numbers
@@ -37,6 +38,59 @@ function Grid({ playerRow, playerCol, ROWMAX, COLMAX, enemy1Row, enemy1Col, bull
         getData(enemyID)
         getData(laserID)
     }, [])
+
+    // Moving the Player ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // prevent the arrow & space keys from scrolling the page!!!
+    window.addEventListener("keydown", function (e) {
+        if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
+            e.preventDefault();
+        }
+    }, false);
+
+    //detecting arrow key presses, or spaces (case 32)
+    // Player can ONLY move left or right
+    function keypress(e) {
+        switch (e.keyCode) {
+            // Space bar: Fire bullet
+            case 32:
+                console.log("space pressed!")
+
+                setBulletFired(true)
+
+                break;
+
+            // Left Arrow Key: Move left by 1 square
+            case 37:
+                if (playerCol > 0) {
+                    // console.log('left', playerCol - 1);
+                    setPlayerCol(playerCol - 1)
+
+                } else {
+                    console.log("You can't go further left!")
+                }
+                break;
+
+            // Right Arrow Key: Move right by 1 square
+            case 39:
+                if (playerCol < COLMAX - 1) {
+                    // console.log('right', playerCol + 1);
+                    setPlayerCol(playerCol + 1)
+
+                } else {
+                    console.log("You can't go further right!")
+                }
+                break;
+        }
+    }
+
+    // Listens for key presses whenever playerRow/playerCol 
+    // are updated, then immediately deletes it. 
+    // This prevents infinite loop of console.logs (somehow)
+    useEffect(() => {
+        document.addEventListener('keydown', keypress)
+        return () => document.removeEventListener("keydown", keypress);
+    }, [playerRow, playerCol])
 
 
     // Render the Grid ///////////////////////////////////////////////////////////////////////////////////////////////
