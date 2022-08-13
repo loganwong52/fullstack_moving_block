@@ -2,8 +2,14 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 
 
-function Grid({ playerRow, playerCol, setPlayerCol, setBulletFired,
-    ROWMAX, COLMAX, enemy1Row, enemy1Col, bulletRow, bulletCol }) {
+function Grid({ playerCol, setPlayerCol, setBulletFired,
+    ROWMAX, COLMAX, bulletRow, bulletCol, setPoints, setYouLost }) {
+    const [playerRow, setPlayerRow] = useState(ROWMAX - 1)
+    // ENEMY 1'S COORDS
+    const [enemy1Row, setEnemy1Row] = useState(Math.floor(Math.random() * 2))
+    const [enemy1Col, setEnemy1Col] = useState(Math.floor(Math.random() * (COLMAX - 1)))
+
+
     // Image related stuff
 
     // Noun Image ID numbers
@@ -91,6 +97,71 @@ function Grid({ playerRow, playerCol, setPlayerCol, setBulletFired,
         document.addEventListener('keydown', keypress)
         return () => document.removeEventListener("keydown", keypress);
     }, [playerRow, playerCol])
+
+
+
+    //  Enemy movement  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Every X ms, enemy 1 moves down 1 row
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setEnemy1Row(prevEnemy1Row => prevEnemy1Row + 1)
+            // console.log("I've moved down!")
+
+        }, 500)
+
+        // this return might actually never run...
+        return () => {
+            clearInterval(timer)
+            console.log("Enemy 1 despawned!")
+        }
+
+    }, [])
+
+    // If enemy is at the bottom, reset it's location to a random position
+    useEffect(() => {
+        // console.log("enemy1Row: ", enemy1Row)
+        // console.log("enemy1Col: ", enemy1Col)
+
+        if (enemy1Row === -1) {
+            // console.log("STOP!!!")
+            setEnemy1Row(Math.floor(Math.random() * 2))     // randomly chooses ROW 0, 1, or 2
+
+            //randomly chooses NEW col that's NOT the same
+            let newCol = enemy1Col
+            if (newCol < 7) {
+                // enemy respawns on the right side (COLS 7 thru 14 inclusive)
+                newCol = Math.floor(Math.random() * (COLMAX - 7) + 7)
+            } else {
+                // >= 6, enemy respawns on the left side (COLS 0 thru 6 inclusive)
+                newCol = Math.floor(Math.random() * 6)
+            }
+            setEnemy1Col(newCol)
+            // console.log("Enemy 1 has reset!")
+
+        } else if (enemy1Row === ROWMAX) {
+            // YOU LOSE!
+            setYouLost(true)
+        }
+
+    }, [enemy1Row])
+
+
+    // When bullet and enemy 1 overlap
+    // it takes enemy 1.25 second to respawn
+    useEffect(() => {
+
+        // if they overlap, increment points by 1
+        if (bulletRow === enemy1Row && bulletCol === enemy1Col) {
+            setPoints(prevPoints => prevPoints + 1)
+
+            // hide the enemy
+            setTimeout(() => { console.log("Enemy 1 is respawning") }, 1250)
+            setEnemy1Row(-1)
+
+        }
+
+    }, [bulletRow, enemy1Row])
 
 
     // Render the Grid ///////////////////////////////////////////////////////////////////////////////////////////////

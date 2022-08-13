@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-function GameHeader({ youLost, points, playerRow, playerCol }) {
+function GameHeader({ youLost, points, playerCol }) {
 
     // Reloads the page
     function reloadPage() {
@@ -22,7 +22,7 @@ function GameHeader({ youLost, points, playerRow, playerCol }) {
 
                     :
                     <div>
-                        <h1>ROW: {playerRow} | COL: {playerCol} | POINTS: {points}</h1>
+                        <h1>COL: {playerCol} | POINTS: {points}</h1>
                     </div>
             }
         </div>
