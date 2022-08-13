@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Grid from '../components/Grid'
 import GameHeader from '../components/GameHeader'
+import GameFooter from '../components/GameFooter'
 
 
 function GamePage() {
@@ -30,7 +31,6 @@ function GamePage() {
     // POINTS
     const [points, setPoints] = useState(0)
     const [youLost, setYouLost] = useState(false)
-    let navigate = useNavigate();
 
     // When the game renders, show alert
     const [isLoaded, setIsLoaded] = useState(false)
@@ -254,37 +254,6 @@ function GamePage() {
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-    const handleSaveScore = (event) => {
-        event.preventDefault()
-
-        // get username
-        let name = event.target[0].value
-
-        if (name.length === 0) {
-            alert("Please enter a name!")
-            return
-        }
-
-        // points is the state value 'points'
-        axios.post('/saveScore', {
-            name: name,
-            score: points
-
-        }).then((response) => {
-            // console.log('response from saveScore:', response)
-
-            //go to show score page
-            navigate('/highscores')
-
-        }).catch((error) => {
-            console.log("There was an error while saving the score!", error)
-
-        })
-
-    }
-
-
     // The actual App
     return (
         <div className="App">
@@ -301,31 +270,7 @@ function GamePage() {
                 bulletRow={bulletRow} bulletCol={bulletCol}
             />
 
-            {
-                youLost
-                    ?
-                    <div>
-                        <h1>Save your score!</h1>
-                        <hr />
-
-                        {/* Prompt user to enter their name */}
-                        <form onSubmit={handleSaveScore} >
-                            <label>
-                                Name:
-                                <input id="name-input" type="text" name="name" />
-                            </label>
-                            <br />
-                            <label>
-                                Points: {points}
-                            </label>
-
-                            <br />
-                            <input type="submit" value="Submit" />
-                        </form>
-                    </div>
-
-                    : ''
-            }
+            <GameFooter youLost={youLost} points={points} />
 
         </div>
     )
