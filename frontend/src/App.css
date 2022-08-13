@@ -31,6 +31,14 @@ h2 {
   margin: 0px;
 }
 
+#welcome-header {
+  margin-top: 200px;
+}
+
+#play-game-btn {
+  margin-top: 25px;
+}
+
 .you-lost-button {
   margin-left: 50px;
 }
