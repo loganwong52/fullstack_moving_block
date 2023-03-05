@@ -22,6 +22,15 @@ If you try to do npm run dev, the project will NOT work correctly!
 4. cd block_proj
 5. python3 manage.py makemigrations block_app
 6. python3 manage.py migrate
-7. pythone manage.py runserver
+7. python3 manage.py runserver
 
 8. click the link: http://127.0.0.1:8000/
+
+
+Checking the database, moving_block_scores_db:
+1. Login to postgres:    sudo -i -u postgres
+2. Open up the PSQL Command Line Interface:  psql
+3. "select" the database you want:     psql moving_block_scores_db
+4. \dt to list all tables
+5. The table that stores player names and scores:    block_app_user
+6. To see all data in the block_app_user data table:      SELECT * FROM block_app_user; 
